@@ -27,7 +27,7 @@ DEBUG = True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "et-django-app.us-south.cf.appdomain.cloud" "us-south.cf.appdomain.cloud"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "et-django-app.us-south.cf.appdomain.cloud", "us-south.cf.appdomain.cloud"]
 
 
 # Application definition
