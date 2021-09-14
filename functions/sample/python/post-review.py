@@ -10,9 +10,7 @@
 import os
 
 from cloudant.client import Cloudant
-from cloudant.query import Query
 from cloudant.error import CloudantException
-from cloudant.result import Result, ResultByKey
 import requests
 
 
@@ -29,6 +27,9 @@ def main(dict):
         )
         database = client['reviews']
 
+        review = database.create_document(dict.review)
+        if review.exists():
+            return { review }
 
     except CloudantException as ce:
         print("unable to connect")
@@ -37,7 +38,4 @@ def main(dict):
         print("connection error")
         return {"error": err}
 
-    query = Query(database, selector={'dealership': {'$eq': dict['dealerId']}})
-    result = query(limit=100)["docs"]
-    return {"reviews": result}
 

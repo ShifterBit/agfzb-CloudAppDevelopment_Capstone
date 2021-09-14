@@ -1,7 +1,6 @@
 /**
  * Get all dealerships
  */
-
 const Cloudant = require('@cloudant/cloudant');
 
 function main(params) {
