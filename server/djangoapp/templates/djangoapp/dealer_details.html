@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% extends 'djangoapp/common.html' %}{% block content %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,7 +12,45 @@
     <!--Add a nav bar here -->
 
     <!-- Add reviews as cards -->
+    <h1 style="text-align: left; margin: 1em auto 1em auto;">Reviews for <b>{{dealer.full_name}}</b></h1>
+    
+    <div class="card-columns">
+      {% for review in reviews %}
+      <div class="card">
+       <div class="card-header bg-white">
+         {% if review.sentiment == 'positive' %}
+          <img class="card-img-left card-image" src="{{ MEDIA_URL }}/emoji/positive.png" height="60px">
+         {% elif review.sentiment == 'negative' %}
+          <img class="card-img-left card-image" src="{{ MEDIA_URL }}/emoji/negative.png" height="60px">
+         {% else %}
+          <img class="card-img-left card-image" src="{{ MEDIA_URL }}/emoji/neutral.png" height="60px">
+         {% endif %}
+       </div> 
+        <div class="card-body bg-light">
+          <div class="card-title">
+            <h3>
+            {{review.car_make}}, {{review.car_model}}
+            </h3>
+          </div>
+          <div class="card-title">
+            <h4>
+            {{review.car_year}}
+            </h4>
+          </div>
+          <div class="card-text">
+          <span style="font-size: 1em;">
+          {{review.review}}
+          </span>
+          </div>
+          
+        </div>
+        
+      </div>
+      {% endfor %}
+      
+    </div>
 
     </body>
 
 </html>
+{% endblock %}
