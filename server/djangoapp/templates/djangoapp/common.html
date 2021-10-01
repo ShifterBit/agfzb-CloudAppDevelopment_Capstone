@@ -12,8 +12,8 @@
 
 </head>
     <body>
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
+    <nav class="navbar navbar-light bg-light" style="margin: 0; padding-left: 0; position: static;">
+        <div class="container-fluid" style="position:static;">
             <div class="navbar-header">
                   <a class="navbar-brand" href="{% url 'djangoapp:index'%}">Online Course</a>
                   <a class="navbar-brand" href="{% url 'djangoapp:about' %}">About Us</a>
@@ -42,8 +42,8 @@
             </ul>
         </div>
     </nav>
-    <main role="main" class="row justify-content-center">
-          <div class="main col-lg-9 col-md-12">{% block content %} {% endblock %}</div>
+    <main role="main" class="justify-content-center">
+          <div class="main col-lg-12" style="magin: auto 0 auto 0 !important;" >{% block content %} {% endblock %}</div>
     </main>
     </body>
 

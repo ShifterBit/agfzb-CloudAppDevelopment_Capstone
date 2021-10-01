@@ -1,4 +1,6 @@
 from typing import Dict
+
+from django.contrib.auth import models
 from djangoapp.restapis import (
     get_dealer_by_id_from_cf,
     get_dealer_reviews_from_cf,
@@ -18,6 +20,7 @@ from datetime import datetime
 import logging
 import json
 import copy
+from . import models, restapis
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -142,8 +145,8 @@ def get_dealer_details(request, dealer_id):
         dealer_url = "https://ff984dbc.us-south.apigw.appdomain.cloud/api/dealership"
         # Get dealers from the URL
         context = dict()
-        context['reviews'] = get_dealer_reviews_from_cf(review_url, dealer_id)
-        context['dealer'] = get_dealer_by_id_from_cf(dealer_url, dealer_id)
+        context["reviews"] = get_dealer_reviews_from_cf(review_url, dealer_id)
+        context["dealer"] = get_dealer_by_id_from_cf(dealer_url, dealer_id)
         # Concat all dealer's short name
         # dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
@@ -168,15 +171,34 @@ def get_dealer_details(request, dealer_id):
 #         return HttpResponse(dealerships)
 
 
-def add_review(request):
+def add_review(request, dealer_id):
     context = {}
+    if request.method == "GET":
+        context = {"cars": models.CarModel.objects.all(), "dealerId": dealer_id}
+        return render(request, "djangoapp/add_review.html", context)
     if request.method == "POST":
-        doc = copy.deepcopy(request.POST)
-
-        url = "https://ff984dbc.us-south.apigw.appdomain.cloud/api/review"
-        dealerId = doc["dealerId"]
-        doc["dealership_list"] = dealerId
-        post_request(url, payload=doc)
-
-        context["dealerId"] = dealerId
-    return render(request, "djangoapp/dealer_details.html", context)
+        if request.user.is_authenticated:
+            form = request.POST
+            review = {
+                "name": str(request.user.first_name) + " " + str(request.user.username),
+                "dealership": dealer_id,
+                "review": form["content"],
+                "purchase": form.get("purchasecheck"),
+            }
+            if form.get("purchasecheck"):
+                review["purchase_date"] = datetime.strptime(
+                    form.get("purchasedate"), "%m/%d/%Y"
+                ).isoformat()
+                car = models.CarModel.objects.get(pk=form["car"])
+                review["car_make"] = car.carmake.name
+                review["car_model"] = car.name
+                review["car_year"] = car.year.strftime("%Y")
+                print(car)
+            json_payload = {"review": review}
+            print(json_payload)
+            url = "https://ff984dbc.us-south.apigw.appdomain.cloud/api/review"
+            api_res = restapis.post_request(url, payload=json_payload, dealerId=dealer_id)
+            print(api_res)
+            return redirect(f'/djangoapp/dealer/{dealer_id}')
+        else:
+            return redirect("/djangoapp/login")

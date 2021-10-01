@@ -1,7 +1,19 @@
 {% extends 'djangoapp/common.html' %}{% block content %}
-<h1 class="skeleton-heading">Dealership Review</h1>
+<link rel="stylesheet" type="text/css" href="extensions/filter-control/bootstrap-table-filter-control.css">
+<script src="extensions/filter-control/bootstrap-table-filter-control.js"></script>
+<h1>Dealership Review</h1>
     <!--Add a dealer table here -->
-     <table class="table" id="table" data-filter-control="true">
+    <style type="text/css" media="all">
+        .fixed-table-body {
+          margin: auto;
+          padding: auto;
+          height: 80% !important;
+
+
+        }
+
+    </style>
+     <table class="table table-bordered table-hover center" id="table" data-filter-control="true">
         <thead>
             <tr>
                 <th data-field="id">ID</th>
@@ -10,19 +22,17 @@
                 <th data-field="address">Address</th>
                 <th data-field="zip">Zip</th>
                 <th data-field="state" data-filter-control="select">State</th>
-                ...
             </tr>
         </thead>
         <tbody>
             {% for dealer in dealership_list %}
                 <tr>
                     <td>{{dealer.id}}</td>
-                    <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>.
+                    <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>
                     <td>{{dealer.city}}</td>
                     <td>{{dealer.address}}</td>
                     <td>{{dealer.zip}}</td>
                     <td>{{dealer.st}}</td>
-                    ...
                 </tr>
             {% endfor %}
         </tbody>
