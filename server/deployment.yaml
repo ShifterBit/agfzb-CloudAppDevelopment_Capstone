@@ -20,7 +20,7 @@ spec:
         run: dealership
     spec:
       containers:
-      - image: us.icr.io/capstone-namespace-3ad8b019/dealership:latest
+      - image: shifterbit/captsone-django:latest
         imagePullPolicy: Always
         name: dealership
         ports:
