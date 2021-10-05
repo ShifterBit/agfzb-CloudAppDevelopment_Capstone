@@ -190,14 +190,6 @@ def add_review(request, dealer_id):
                 review["car_make"] = car.carmake.name
                 review["car_model"] = car.name
                 review["car_year"] = car.year.strftime("%Y")
-                print(car)
-            json_payload = {"review": review}
-            print(json_payload)
-            url = "https://ff984dbc.us-south.apigw.appdomain.cloud/api/review"
-            api_res = restapis.post_request(
-                url, payload=json_payload, dealerId=dealer_id
-            )
-            print(api_res)
             return redirect(f"/djangoapp/dealer/{dealer_id}")
         else:
             return redirect("/djangoapp/login")
