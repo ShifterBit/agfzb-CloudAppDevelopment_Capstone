@@ -23,6 +23,12 @@ spec:
       - image: shifterbit/captsone-django:latest
         imagePullPolicy: Always
         name: dealership
+        env:
+          - name: NLU_API_KEY
+            valueFrom:
+               secretKeyRef:
+                  name: nlusecret
+                  key: apikey
         ports:
         - containerPort: 8000
           protocol: TCP
