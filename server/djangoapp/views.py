@@ -1,25 +1,21 @@
-from typing import Dict
+import logging
+import json
+import random
+from datetime import datetime
 
 from django.contrib.auth import models
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
 from djangoapp.restapis import (
     get_dealer_by_id_from_cf,
     get_dealer_reviews_from_cf,
     get_dealers_from_cf,
-    post_request,
 )
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
-from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404, render, redirect
 
 # from .models import related models
 # from .restapis import related methods
 from django.contrib.auth import login, logout, authenticate
-from django.contrib import messages
-from datetime import datetime
-import logging
-import json
-import copy
 from . import models, restapis
 
 # Get an instance of a logger
@@ -183,7 +179,8 @@ def add_review(request, dealer_id):
                 "name": str(request.user.first_name) + " " + str(request.user.username),
                 "dealership": dealer_id,
                 "review": form["content"],
-                "purchase": form.get("purchasecheck"),
+                "purchase": False,
+                "id": random.randint(1, 5000),
             }
             if form.get("purchasecheck"):
                 review["purchase_date"] = datetime.strptime(
@@ -197,8 +194,10 @@ def add_review(request, dealer_id):
             json_payload = {"review": review}
             print(json_payload)
             url = "https://ff984dbc.us-south.apigw.appdomain.cloud/api/review"
-            api_res = restapis.post_request(url, payload=json_payload, dealerId=dealer_id)
+            api_res = restapis.post_request(
+                url, payload=json_payload, dealerId=dealer_id
+            )
             print(api_res)
-            return redirect(f'/djangoapp/dealer/{dealer_id}')
+            return redirect(f"/djangoapp/dealer/{dealer_id}")
         else:
             return redirect("/djangoapp/login")
